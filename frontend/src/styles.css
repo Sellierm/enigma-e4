@@ -56,6 +56,96 @@ button {
   cursor: pointer;
 }
 
+.site-header {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  border-bottom: 1px solid #e4e7ec;
+  background: rgb(255 255 255 / 95%);
+  box-shadow: 0 4px 16px rgb(16 24 40 / 5%);
+  backdrop-filter: blur(10px);
+}
+
+.site-header__inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: min(1100px, calc(100% - 32px));
+  min-height: 72px;
+  margin: 0 auto;
+  gap: 24px;
+}
+
+.site-header__brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  color: #172033;
+  font-size: 1.05rem;
+  font-weight: 800;
+  text-decoration: none;
+}
+
+.site-header__mark {
+  display: grid;
+  width: 34px;
+  height: 34px;
+  place-items: center;
+  border-radius: 10px;
+  background: #172033;
+  color: #fff;
+  font-size: 0.75rem;
+  letter-spacing: 0.04em;
+}
+
+.site-header__navigation {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.site-header__link {
+  padding: 10px 14px;
+  border-radius: 8px;
+  color: #475467;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.site-header__link:hover,
+.site-header__link.is-active {
+  background: #eef2f6;
+  color: #172033;
+}
+
+.site-header__brand:focus-visible,
+.site-header__link:focus-visible,
+.site-header__menu-toggle:focus-visible {
+  outline: 3px solid #84adff;
+  outline-offset: 3px;
+}
+
+.site-header__menu-toggle {
+  display: none;
+  padding: 8px;
+  border: 1px solid #d0d5dd;
+  border-radius: 8px;
+  background: #fff;
+  color: #172033;
+}
+
+.site-header__menu-toggle span {
+  display: block;
+  width: 20px;
+  height: 2px;
+  margin: 4px 0;
+  background: currentColor;
+}
+
+.login-page {
+  min-height: calc(100vh - 72px);
+}
+
 .container {
   width: min(900px, calc(100% - 32px));
   margin: 0 auto;
@@ -484,6 +574,42 @@ footer {
 }
 
 @media (max-width: 650px) {
+  .site-header__inner {
+    min-height: 64px;
+  }
+
+  .site-header__menu-toggle {
+    display: block;
+  }
+
+  .site-header__navigation {
+    position: absolute;
+    top: 100%;
+    right: 16px;
+    left: 16px;
+    display: none;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 4px;
+    padding: 8px;
+    border: 1px solid #e4e7ec;
+    border-radius: 12px;
+    background: #fff;
+    box-shadow: 0 12px 30px rgb(16 24 40 / 12%);
+  }
+
+  .site-header__navigation.is-open {
+    display: flex;
+  }
+
+  .site-header__link {
+    padding: 12px;
+  }
+
+  .login-page {
+    min-height: calc(100vh - 64px);
+  }
+
   .container {
     padding-top: 32px;
   }

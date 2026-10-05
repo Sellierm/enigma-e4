@@ -85,7 +85,7 @@ const handleSubmit = async (event) => {
   const isRegister = mode === "register";
 
   return (
-    <main style={styles.page}>
+    <main className="login-page" style={styles.page}>
       <section style={styles.card} aria-labelledby="auth-title">
         <div style={styles.tabs} role="tablist" aria-label="Choix du mode d’authentification">
           <button
@@ -185,7 +185,6 @@ const handleSubmit = async (event) => {
 
 const styles = {
   page: {
-    minHeight: "100vh",
     display: "grid",
     placeItems: "center",
     padding: "24px",

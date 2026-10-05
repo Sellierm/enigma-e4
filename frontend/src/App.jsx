@@ -18,6 +18,8 @@ function ProtectedRoute({ children }) {
   return children;
 }
 
+import Header from "./components/Header/Header";
+
 function PublicRoute({ children }) {
   const { isAuthenticated, loading } = useAuth();
 
@@ -36,6 +38,7 @@ function App() {
   return (
     <AuthProvider>
       <BrowserRouter>
+        <Header />
         <Routes>
           <Route
             path="/"
