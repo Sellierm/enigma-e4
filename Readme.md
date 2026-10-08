@@ -38,7 +38,7 @@ les informations du projet et de faciliter la collaboration au sein de l'équipe
 
 <!-- À compléter à la fin du développement : liste des fonctionnalités -->
 
-Le suivi détaillé est dans les [issues](https://github.com/MaxVast/github-e4/issues).
+Le suivi détaillé est dans les [issues](https://github.com/Sellierm/github-e4/issues).
 
 ---
 
