@@ -1,6 +1,9 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import ThemeToggle from "../../components/ThemeToggle";
+import { useAuth } from "../../context/AuthContext";
+
+const API_URL = import.meta.env.VITE_API_URL ?? "http://localhost:3000";
 
 const initialTasks = [
   {
@@ -105,31 +108,56 @@ export function formatCompletedTasks(count) {
   return `${count} terminée${count > 1 ? "s" : ""}`;
 }
 
+function toUiTask(task) {
+  return {
+    ...task,
+    completed: Boolean(task.completed),
+    priority: Boolean(task.priority),
+    description: task.description ?? "",
+    dueDate: task.dueDate ?? "",
+    createdAt: task.createdAt ?? new Date().toISOString(),
+  };
+}
+
 function Home() {
-  const [tasks, setTasks] = useState(() => {
-    const savedTasks = localStorage.getItem("team-tasks");
+  const { session } = useAuth();
+  const userId = session?.user?.id;
 
-    if (!savedTasks) {
-      return initialTasks;
+  const [tasks, setTasks] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+
+  useEffect(() => {
+    if (!userId) {
+      return;
     }
 
-    try {
-      const parsedTasks = JSON.parse(savedTasks);
+    async function fetchUserTasks() {
+      setLoading(true);
+      setError("");
 
-      return Array.isArray(parsedTasks)
-        ? parsedTasks.map((task) => ({
-            ...task,
-            completed: Boolean(task.completed),
-            priority: Boolean(task.priority),
-            description: task.description ?? "",
-            dueDate: task.dueDate ?? "",
-            createdAt: task.createdAt ?? new Date().toISOString(),
-          }))
-        : initialTasks;
-    } catch {
-      return initialTasks;
+      try {
+        const response = await fetch(
+          `${API_URL}/api/task/getUsertask/${userId}`,
+          { credentials: "include" },
+        );
+
+        if (!response.ok) {
+          throw new Error("Erreur lors du chargement des tâches");
+        }
+
+        const data = await response.json();
+        setTasks(Array.isArray(data) ? data.map(toUiTask) : []);
+      } catch (err) {
+        console.error(err);
+        setError("Impossible de charger les tâches.");
+      } finally {
+        setLoading(false);
+      }
     }
-  });
+
+    fetchUserTasks();
+  }, [userId]);
 
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
@@ -139,33 +167,41 @@ function Home() {
   const [editingTitle, setEditingTitle] = useState("");
 
   function saveTasks(nextTasks) {
-    const normalizedTasks = nextTasks.map((task) => ({
-      ...task,
-      completed: Boolean(task.completed),
-      priority: Boolean(task.priority),
-      description: task.description ?? "",
-      dueDate: task.dueDate ?? "",
-      createdAt: task.createdAt ?? new Date().toISOString(),
-    }));
-
-    setTasks(normalizedTasks);
-    localStorage.setItem("team-tasks", JSON.stringify(normalizedTasks));
+    setTasks(nextTasks.map(toUiTask));
   }
 
-  function handleSubmit(event) {
+  async function handleSubmit(event) {
     event.preventDefault();
 
     if (!title.trim()) {
       return;
     }
 
-    saveTasks([
-      ...tasks,
-      createTask(title, Date.now(), { description, dueDate }),
-    ]);
-    setTitle("");
-    setDescription("");
-    setDueDate("");
+    try {
+      const response = await fetch(`${API_URL}/api/task/createOne`, {
+        method: "POST",
+        credentials: "include",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          title: title.trim(),
+          description: description.trim(),
+          userId,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Erreur lors de la création de la tâche");
+      }
+
+      const createdTask = await response.json();
+      saveTasks([...tasks, { ...createdTask, dueDate }]);
+      setTitle("");
+      setDescription("");
+      setDueDate("");
+    } catch (err) {
+      console.error(err);
+      setError("Impossible de créer la tâche.");
+    }
   }
 
   function toggleTask(id) {
@@ -184,8 +220,22 @@ function Home() {
     );
   }
 
-  function deleteTask(id) {
-    saveTasks(tasks.filter((task) => task.id !== id));
+  async function deleteTask(id) {
+    try {
+      const response = await fetch(`${API_URL}/api/task/deleteOne/${id}`, {
+        method: "DELETE",
+        credentials: "include",
+      });
+
+      if (!response.ok) {
+        throw new Error("Erreur lors de la suppression de la tâche");
+      }
+
+      saveTasks(tasks.filter((task) => task.id !== id));
+    } catch (err) {
+      console.error(err);
+      setError("Impossible de supprimer la tâche.");
+    }
   }
 
   function startEditing(task) {
@@ -198,7 +248,7 @@ function Home() {
     setEditingTitle("");
   }
 
-  function saveEditedTask(event, id) {
+  async function saveEditedTask(event, id) {
     event.preventDefault();
 
     const trimmedTitle = editingTitle.trim();
@@ -207,12 +257,28 @@ function Home() {
       return;
     }
 
-    saveTasks(
-      tasks.map((task) =>
-        task.id === id ? { ...task, title: trimmedTitle } : task,
-      ),
-    );
-    cancelEditing();
+    try {
+      const response = await fetch(`${API_URL}/api/task/updateOne/${id}`, {
+        method: "PUT",
+        credentials: "include",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ title: trimmedTitle }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Erreur lors de la modification de la tâche");
+      }
+
+      saveTasks(
+        tasks.map((task) =>
+          task.id === id ? { ...task, title: trimmedTitle } : task,
+        ),
+      );
+      cancelEditing();
+    } catch (err) {
+      console.error(err);
+      setError("Impossible de modifier la tâche.");
+    }
   }
 
   const visibleTasks = useMemo(
@@ -304,8 +370,12 @@ function Home() {
           </div>
         </div>
 
+        {error && <p className="empty">{error}</p>}
+
         <ul className="task-list">
-          {visibleTasks.length === 0 ? (
+          {loading ? (
+            <li className="empty">Chargement des tâches...</li>
+          ) : visibleTasks.length === 0 ? (
             <li className="empty">Aucune tâche dans cette catégorie.</li>
           ) : (
             visibleTasks.map((task) => (
