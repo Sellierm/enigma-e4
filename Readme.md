@@ -101,7 +101,7 @@ Les outils suivants ont été utilisés pour construire le projet :
 
 #### **Qualité du code**
 
-- **[Vitest](https://vitest.dev/)** : tests
+- **[Vitest](https://vitest.dev/)** : test
 - **[ESLint](https://eslint.org/)** : analyse statique
 - **[GitHub Actions](https://docs.github.com/actions)** : intégration continue
 
