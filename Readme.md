@@ -62,12 +62,12 @@ ou [IntelliJ IDEA](https://www.jetbrains.com/idea/), avec le support d'ESLint ac
 
 ```bash
 # Cloner le dépôt
-git clone https://github.com/MaxVast/github-e4.git
+git clone https://github.com/Sellierm/github-e4.git
 
 # Accéder au dossier du projet
 cd github-e4
 
-# Se placer sur la branche 
+# Se placer sur la branche
 git checkout votre_branche
 
 # Installer les dépendances
@@ -79,13 +79,13 @@ npm run dev
 
 ### Scripts disponibles
 
-| Commande | Description |
-|----------|-------------|
-| `npm run dev` | Lance le serveur de développement |
-| `npm run build` | Génère la version de production dans `dist/` |
-| `npm run lint` | Analyse le code avec ESLint |
-| `npm test` | Exécute les tests une fois |
-| `npm run test:watch` | Exécute les tests en continu |
+| Commande             | Description                                  |
+| -------------------- | -------------------------------------------- |
+| `npm run dev`        | Lance le serveur de développement            |
+| `npm run build`      | Génère la version de production dans `dist/` |
+| `npm run lint`       | Analyse le code avec ESLint                  |
+| `npm test`           | Exécute les tests une fois                   |
+| `npm run test:watch` | Exécute les tests en continu                 |
 
 ---
 
@@ -116,15 +116,15 @@ Les outils suivants ont été utilisés pour construire le projet :
 
 Toute la documentation est dans le dossier [`docs/`](./docs/index.md) :
 
-| Page | Contenu |
-|------|---------|
-| [Démarrage](./docs/getting-started.md) | Installation et premier lancement |
-| [Architecture](./docs/architecture.md) | Organisation du code |
-| [Configuration](./docs/configuration.md) | Variables d'environnement et outils |
-| [Déploiement](./docs/deployment.md) | Mise en ligne |
-| [Contribuer](./docs/contributing.md) | Guide de contribution |
-| [Guide d'utilisation](./docs/user-guide.md) | Utiliser l'application |
-| [FAQ](./docs/faq.md) | Questions fréquentes |
+| Page                                        | Contenu                             |
+| ------------------------------------------- | ----------------------------------- |
+| [Démarrage](./docs/getting-started.md)      | Installation et premier lancement   |
+| [Architecture](./docs/architecture.md)      | Organisation du code                |
+| [Configuration](./docs/configuration.md)    | Variables d'environnement et outils |
+| [Déploiement](./docs/deployment.md)         | Mise en ligne                       |
+| [Contribuer](./docs/contributing.md)        | Guide de contribution               |
+| [Guide d'utilisation](./docs/user-guide.md) | Utiliser l'application              |
+| [FAQ](./docs/faq.md)                        | Questions fréquentes                |
 
 ---
 
